@@ -114,7 +114,6 @@ describe ('riders API E2E tesing', () => {
       test_riders.map((rider) => { return request.post('/api/riders').send(rider); })
     )
     .then((results) => {
-      // console.log('results ', results);
       results.forEach((item, index) => {
         test_riders[index]._id = item.body._id;
         test_riders[index].__v = 0;
