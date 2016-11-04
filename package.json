@@ -1,0 +1,37 @@
+{
+  "name": "express-mongo-relations",
+  "version": "0.1.0",
+  "description": "Express MongoDB resource server",
+  "main": "express-mongo-relations.js",
+  "scripts": {
+    "lint": "eslint **/*.js",
+    "pretest": "npm run lint",
+    "test": "MONGODB_URI=mongodb://localhost/riders-test mocha",
+    "build": "npm install",
+    "dev": "npm install --save-dev",
+    "test:watch": "MONGODB_URI=mongodb://localhost/riders-test nodemon --exec mocha",
+    "start": "MONGODB_URI=mongodb://localhost/riders node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markgreenwood/express-mongo-relations.git"
+  },
+  "author": "@markgreenwood",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/markgreenwood/express-mongo-relations/issues"
+  },
+  "homepage": "https://github.com/markgreenwood/express-mongo-relations#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "eslint": "^3.8.1",
+    "mocha": "^3.1.2",
+    "morgan": "^1.7.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mongoose": "^4.6.5"
+  }
+}
