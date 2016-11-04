@@ -56,20 +56,18 @@ describe ('teams API E2E testing', () => {
       });
   });
 
-  it ('POST a team stores the data and returns the stored object', (done) => {
-
-    request
-      .post('/api/teams')
-      .send(test_teams[0])
-      .then((res) => {
-        const team = res.body;
-        expect(team._id).to.be.ok;
-        test_teams[0].__v = 0;
-        test_teams[0]._id = team._id;
-        done();
-      })
-      .catch(done);
-
+  it ('POSTs a bunch of teams', (done) => {
+    Promise.all(
+      test_teams.map((team) => { return request.post('/api/teams').send(team); })
+    )
+    .then((results) => {
+      results.forEach((item, index) => {
+        test_teams[index]._id = item.body._id;
+        test_teams[index].__v = 0;
+      });
+      done();
+    })
+    .catch(done);
   });
 
   it ('GET /:id returns the correct team', (done) => {
@@ -83,31 +81,15 @@ describe ('teams API E2E testing', () => {
       .catch(done);
   });
 
-  it ('GET / returns all riders after POST', (done) => {
+  it ('GET / returns all teams after POST', (done) => {
 
     request
       .get('/api/teams/')
       .then((res) => {
-        expect(res.body).to.deep.equal( [ test_teams[0] ] );
+        expect(res.body).to.deep.equal(test_teams);
         done();
       })
       .catch(done);
-  });
-
-  it ('adds (POSTs) another team', (done) => {
-
-    request
-      .post('/api/teams')
-      .send(test_teams[1])
-      .then((res) => {
-        const new_team = res.body;
-        expect(new_team._id).to.be.ok;
-        test_teams[1].__v = 0;
-        test_teams[1]._id = new_team._id;
-        done();
-      })
-      .catch(done);
-
   });
 
   it ('updates specific team info given id', (done) => {
