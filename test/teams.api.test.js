@@ -121,6 +121,17 @@ describe ('teams API E2E testing', () => {
 
   });
 
+  it ('GET /riders lists all teams along with the riders on each team', (done) => {
+  
+    request
+      .get('/api/teams/riders')
+      .then((res) => {
+        expect((res.body)[0].riders.length).to.equal(3);
+        done();
+      })
+      .catch(done);
+  });
+
   it ('updates specific team info given id', (done) => {
     request
       .put(`/api/teams/${test_teams[0]._id}`)
