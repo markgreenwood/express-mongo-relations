@@ -10,7 +10,7 @@
     "build": "npm install",
     "dev": "npm install --save-dev",
     "test:watch": "MONGODB_URI=mongodb://localhost/riders-test nodemon --exec mocha",
-    "start": "MONGODB_URI=mongodb://localhost/riders node server.js"
+    "start": "MONGODB_URI=mongodb://localhost/riders-test node server.js"
   },
   "repository": {
     "type": "git",

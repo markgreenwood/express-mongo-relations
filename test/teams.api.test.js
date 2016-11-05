@@ -7,6 +7,7 @@ const connection = require('../lib/setup-mongoose');
 const app = require('../lib/app');
 
 describe ('teams API E2E testing', () => {
+  let test_riders;
   const test_teams = [
     {
       team: 'HTC',
@@ -48,12 +49,24 @@ describe ('teams API E2E testing', () => {
 
   const request = chai.request(app);
 
-  it ('GET / should return empty array', () => {
+  it ('loads test riders from riders collection', (done) => {
+    request
+      .get('/api/riders')
+      .then((res) => {
+        test_riders = res.body;
+        done();
+      })
+      .catch(done);
+  });
+
+  it ('GET / should return empty array', (done) => {
     request 
       .get('/api/teams')
       .then((res) => {
         expect(res.body).to.deep.equal([]);
-      });
+        done();
+      })
+      .catch(done);
   });
 
   it ('POSTs a bunch of teams', (done) => {
@@ -90,6 +103,22 @@ describe ('teams API E2E testing', () => {
         done();
       })
       .catch(done);
+  });
+
+  it ('PUT /:team_id/rider/:rider_id assigns rider "rider_id" to team "team_id"', (done) => {
+
+    request
+      .put(`/api/teams/${test_teams[0]._id}/rider/${test_riders[0]._id}`)
+      .then(() => {
+        request
+          .get(`/api/riders/${test_riders[0]._id}`)
+          .then((res) => {
+            expect(res.body.teamId).to.equal(test_teams[0]._id);
+            done();
+          })
+          .catch(done);
+      });
+
   });
 
   it ('updates specific team info given id', (done) => {

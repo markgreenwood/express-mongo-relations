@@ -11,7 +11,6 @@ describe ('riders API E2E tesing', () => {
   const test_riders = [
     {
       name: 'George Hincapie',
-      team: 'HTC',
       role: 'leader',
       nationality: 'American',
       height: 185,
@@ -19,7 +18,6 @@ describe ('riders API E2E tesing', () => {
     },
     {
       name: 'Jan Ullrich',
-      team: 'Deutsche Telekom',
       role: 'GC',
       nationality: 'German',
       height: 183,
@@ -27,7 +25,6 @@ describe ('riders API E2E tesing', () => {
     },
     {
       name: 'Jens Voigt',
-      team: 'Trek',
       role: 'roleur',
       nationality: 'German',
       height: 178,
@@ -35,7 +32,6 @@ describe ('riders API E2E tesing', () => {
     },
     {
       name: 'Mark Cavendish',
-      team: 'HTC',
       role: 'sprinter',
       nationality: 'Manx',
       height: 170,
@@ -43,7 +39,6 @@ describe ('riders API E2E tesing', () => {
     },
     {
       name: 'Bradley Wiggins',
-      team: 'Sky',
       height: 165,
       weight: 55,
       nationality: 'English',
@@ -51,7 +46,6 @@ describe ('riders API E2E tesing', () => {
     },
     {
       name: 'David Etxabarria',
-      team: 'Euskaltel',
       role: 'climber',
       nationality: 'Basque',
       height: 167,
@@ -59,7 +53,6 @@ describe ('riders API E2E tesing', () => {
     },
     {
       name: 'Cadel Evans',
-      team: 'Sky',
       height: 167,
       weight: 59,
       nationality: 'Australian',
