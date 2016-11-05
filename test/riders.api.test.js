@@ -57,6 +57,13 @@ describe ('riders API E2E tesing', () => {
       weight: 59,
       nationality: 'Australian',
       role: 'climber'
+    },
+    {
+      name: 'Mark Renshaw',
+      height: 178,
+      weight: 73,
+      nationality: 'Australian',
+      role: 'leadout'
     }
   ];
 
