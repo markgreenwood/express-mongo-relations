@@ -2,6 +2,8 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const expect = chai.expect;
 chai.use(chaiHttp);
+chai.should();
+chai.use(require('chai-things'));
 
 const connection = require('../lib/setup-mongoose');
 const app = require('../lib/app');
@@ -93,22 +95,6 @@ describe ('riders API E2E tesing', () => {
       });
   });
 
-  // it ('POST a rider stores the data and returns the stored object', (done) => {
-
-  //   request
-  //     .post('/api/riders')
-  //     .send(test_riders[0])
-  //     .then((res) => {
-  //       const rider = res.body;
-  //       expect(rider._id).to.be.ok;
-  //       test_riders[0].__v = 0;
-  //       test_riders[0]._id = rider._id;
-  //       done();
-  //     })
-  //     .catch(done);
-
-  // });
-
   it ('POSTs a bunch of riders', (done) => {
     Promise.all(
       test_riders.map((rider) => { return request.post('/api/riders').send(rider); })
@@ -123,17 +109,6 @@ describe ('riders API E2E tesing', () => {
     .catch(done);
   });
 
-  it ('GET /:id returns the correct rider', (done) => {
-
-    request
-      .get(`/api/riders/${test_riders[0]._id}`)
-      .then((res) => {
-        expect(res.body).to.deep.equal(test_riders[0]);
-        done();
-      })
-      .catch(done);
-  });
-
 
   it ('GET / returns all riders after POST', (done) => {
 
@@ -146,19 +121,42 @@ describe ('riders API E2E tesing', () => {
       .catch(done);
   });
 
-  it ('returns only riders who are GC', (done) => {
+  it ('GET /:id returns the correct rider', (done) => {
+
     request
-      .get('/api/riders')
-      .query({ role: 'GC' })
+      .get(`/api/riders/${test_riders[0]._id}`)
       .then((res) => {
-        const first_rtnd = res.body[0];
-        expect(first_rtnd.name).to.deep.equal('Jan Ullrich');
+        expect(res.body).to.deep.equal(test_riders[0]);
         done();
       })
       .catch(done);
   });
 
-  it ('updates specific rider info given id', (done) => {
+  it ('GET /api/riders?role=GC returns only riders who are GC', (done) => {
+    request
+      .get('/api/riders')
+      .query({ role: 'GC' })
+      .then((res) => {
+        const roles = res.body.map((rider) => { return rider.role; });
+        roles.should.all.equal('GC');
+        done();
+      })
+      .catch(done);
+  });
+
+  it ('GET /api/riders?nationality=German returns only riders who are German', (done) => {
+    request
+      .get('/api/riders')
+      .query({ nationality: 'German' })
+      .then((res) => {
+        const nationalities = res.body.map((rider) => { return rider.nationality; });
+        nationalities.should.all.equal('German');
+        done();
+      })
+      .catch(done);
+  });
+
+  it ('PUT /api/riders/:id with info object updates specific rider info given id', (done) => {
     request
       .put(`/api/riders/${test_riders[1]._id}`)
       .send({ weight: 90 })
@@ -174,7 +172,7 @@ describe ('riders API E2E tesing', () => {
       .catch(done);
   });
 
-  it ('deletes specific rider given id', (done) => {
+  it ('DELETE /api/riders/:id deletes specific rider given id', (done) => {
     request
       .delete(`/api/riders/${test_riders[1]._id}`)
       .then(() => {

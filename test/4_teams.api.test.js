@@ -10,7 +10,7 @@ describe ('teams API E2E testing', () => {
   let test_riders;
   const test_teams = [
     {
-      team: 'HTC',
+      team: 'HTC-Highroad',
       sponsor: 'HTC',
       country: 'US'
     },
@@ -20,14 +20,19 @@ describe ('teams API E2E testing', () => {
       country: 'Germany'
     },
     {
-      team: 'Leopard-Trek',
+      team: 'Trek',
       sponsor: 'Trek Bicycles',
-      country: 'Lichtenstein',
+      country: 'US',
     },
     {
       team: 'Euskaltel Euskadi',
       sponsor: 'Euskaltel',
       country: 'Spain'
+    },
+    {
+      team: 'Sky',
+      sponsor: 'Sky UK Ltd',
+      country: 'UK'
     }
   ];
 
@@ -107,13 +112,26 @@ describe ('teams API E2E testing', () => {
 
   it ('PUT /:team_id/rider/:rider_id assigns rider "rider_id" to team "team_id"', (done) => {
 
-    request
-      .put(`/api/teams/${test_teams[0]._id}/rider/${test_riders[0]._id}`)
+    const assignments = [
+      [ 0, 0 ],
+      [ 1, 2 ],
+      [ 2, 0 ],
+      [ 3, 4 ],
+      [ 4, 3 ],
+      [ 5, 4 ],
+      [ 6, 0 ]
+    ];
+
+    Promise.all(
+      assignments.map((assignment) => {
+        return request.put(`/api/teams/${test_teams[assignment[1]]._id}/rider/${test_riders[assignment[0]]._id}`);
+      })
+    )
       .then(() => {
         request
           .get(`/api/riders/${test_riders[0]._id}`)
           .then((res) => {
-            expect(res.body.teamId).to.equal(test_teams[0]._id);
+            expect(res.body.teamId._id).to.equal(test_teams[0]._id);
             done();
           })
           .catch(done);
@@ -121,27 +139,33 @@ describe ('teams API E2E testing', () => {
 
   });
 
-  it ('PUT two more riders on the same team as before', (done) => {
+  // it ('PUT two more riders on the same team as before', (done) => {
 
-    request
-      .put(`/api/teams/${test_teams[0]._id}/rider/${test_riders[2]._id}`)
-      .then(() => {
-        request
-          .put(`/api/teams/${test_teams[0]._id}/rider/${test_riders[6]._id}`)
-          .then(() => {
-            done();
-          })
-          .catch(done);
-      })
-      .catch(done);
-  });
+  //   request
+  //     .put(`/api/teams/${test_teams[0]._id}/rider/${test_riders[2]._id}`)
+  //     .then(() => {
+  //       request
+  //         .put(`/api/teams/${test_teams[0]._id}/rider/${test_riders[6]._id}`)
+  //         .then(() => {
+  //           done();
+  //         })
+  //         .catch(done);
+  //     })
+  //     .catch(done);
+  // });
 
   it ('GET /:team_id/riders lists the specified team along with the riders on it', (done) => {
   
     request
       .get(`/api/teams/${test_teams[0]._id}/riders`)
       .then((res) => {
-        expect(res.body.riders.length).to.equal(3);
+        const members = res.body.riders;
+        expect(members.length).to.equal(3);
+        expect(members.map((r) => { return r.name; })).to.deep.equal([
+          'George Hincapie',
+          'Mark Cavendish',
+          'Mark Renshaw'
+        ]);
         done();
       })
       .catch(done);
@@ -176,6 +200,28 @@ describe ('teams API E2E testing', () => {
             expect(err.response.status).to.equal(404);
             done();
           });
+      })
+      .catch(done);
+  });
+  
+  it ('GET /api/teams/:team_id/riders returns team info with a list of riders on the team', (done) => {
+    request
+      .get(`/api/teams/${test_teams[0]._id}/riders`)
+      .then((res) => {
+        const team = res.body;
+        expect(team.riders.length).to.equal(3);
+        done();
+      })
+      .catch(done);
+  });
+
+  it ('GET /api/riders/:rider_id returns a rider with his associated team name', (done) => {
+    request
+      .get(`/api/riders/${test_riders[0]._id}`)
+      .then((res) => {
+        const rider = res.body;
+        expect(rider.teamId.team).to.equal('HTC-Highroad');
+        done();
       })
       .catch(done);
   });
