@@ -211,6 +211,28 @@ describe ('riders API E2E tesing', () => {
       .catch(done);
   });
 
+  it ('GET /api/riders/avgWeight returns average weight of riders', (done) => {
+    request
+      .get('/api/riders/avgWeight')
+      .then((res) => {
+        expect(res.body.avgWeight).to.be.a('number');
+        expect(res.body.avgWeight).to.be.within(40,90);
+        done();
+      })
+      .catch(done);
+  });
+
+  it ('GET /api/riders/avgWeight?role=climber makes sure climbers are really light', (done) => {
+    request
+      .get('/api/riders/avgWeight')
+      .query({ role: 'climber' })
+      .then((res) => {
+        expect(res.body.avgWeight).to.be.below(65);
+        done();
+      })
+      .catch(done);
+  });
+
   // after((done) => {
   //   connection.close(done);
   // });

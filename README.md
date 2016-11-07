@@ -1,17 +1,18 @@
-# Bitmap transformer
+# Pro cycling riders and teams database
 
 ## Description
 
-TODO: Add program description.
+This database keeps track of professional cyclists and their associated teams.
+Each cyclist's name and nationality are tracked, along with (optionally) their
+height, weight, and role on the team. The teams are tracked along with their
+sponsor name and country in which they're based.
 
-## Code Example
+From the database, one can get a list of riders containing the team they're on,
+a list of all teams, and info for a particular team including the list of riders on the
+team.
 
-```
-const Bitmap = require('./lib/bitmap-xfmr');
-let myBmp = new Bitmap('example-bitmap.bmp', (err) => { console.log(err || 'Done!'); });
-myBmp.transform('redder', 3);
-myBmp.writeBufferToFile('images/example-redder3.bmp', (err) => { console.log(err || 'Done writing!'); });
-```
+The administrator may also add new teams and new riders, update information on a current
+rider or team, and establish that an existing rider has joined an existing team.
 
 ## Motivation
 
@@ -19,37 +20,100 @@ This was written as a lab assignment for Code Fellows 401 class.
 
 ## API Reference
 
-### Constructor
-
-```myBmp = new Bitmap(filename, [callback(err, data)]);```
-
-Construct a new Bitmap from the data in filename.
-
-### Transformer
-
-```myBmp.transform(label, [arguments])```
-
-Transform the bitmap where label is one of the available transforms:
- - 'redder' makes the image redder by a specified factor
- - 'bluer' makes the image bluer...
- - 'greener' makes the image greener...
- - 'invert' inverts the colors in the image (i.e. new_color = 255 - old_color)
- - 'grayscale' makes the image grayer by a specified factor
-
-Example:
+### GET operations
 
 ```
-myBmp.transform('redder', 3);
-myBmp.writeBufferToFile('images/redder3.bmp', (err) => {
-  console.log(err || 'Done!');
-});
+GET /api/riders
+GET /api/riders?role=sprinter
+GET /api/riders?nationality=US
 ```
 
-### Save to file
+Get a list of all riders in the database (including team name if available).
+The operation is queryable (to filter by, e.g., role or nationality).
 
-```myBmp.writeBufferToFile(filename, [callback(err, data)])```
+```
+GET /api/teams
+```
 
-Write the Bitmap object's buffer out to a .bmp file.
+Get a list of all teams in the database.
+
+```
+GET /api/riders/<rider_id>
+```
+
+Get info for a specific rider (including team if available).
+
+```
+GET /api/teams/<team_id>
+```
+
+Get info for a specific team (including a list of riders on the team).
+
+```
+GET /api/riders/avgHeight
+GET /api/riders/avgHeight?role=climber
+GET /api/riders/avgWeight
+```
+
+These specialized operations returns the average height and weight of the riders in the
+database. It is queryable, for example, by role.
+
+### POST operations
+
+```
+POST /api/riders
+{
+  name: 'Jurgen Spengler',
+  nationality: 'Luxembourger',
+  height: 180,
+  weight: 70,
+  role: 'sprinter'
+}
+```
+
+POSTs a new rider to the database.
+
+```
+POST /api/teams
+{
+  team: 'Team CodeFellows',
+  sponsor: 'Code Fellows LLC',
+  country: 'US'
+}
+```
+
+POSTs a new team to the database.
+
+```
+PUT /api/riders/<rider_id>
+{
+  weight: 80
+}
+```
+
+Update a rider's data (somebody gained weight in the off-season...)
+
+```
+PUT /api/teams/<team_id>
+{
+  sponsor: 'REI'
+}
+```
+
+Update a team's data.
+
+```
+PUT /api/teams/<team_id>/rider/<rider_id>
+```
+
+Assigns a rider to a team (contract renegotiation?)
+
+```
+DELETE /api/riders/<rider_id>
+DELETE /api/teams/<team_id>
+```
+
+Removes a particular rider or team from the database.
 
 ## Tests
 

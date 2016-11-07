@@ -110,7 +110,7 @@ describe ('teams API E2E testing', () => {
       .catch(done);
   });
 
-  it ('PUT /:team_id/rider/:rider_id assigns rider "rider_id" to team "team_id"', (done) => {
+  it ('PUT /api/teams/:team_id/rider/:rider_id assigns rider "rider_id" to team "team_id"', (done) => {
 
     const assignments = [
       [ 0, 0 ],
