@@ -1,4 +1,7 @@
-$.ajax('/api/riders').done(function(data) {
+/* eslint-disable no-undef */
+
+$.ajax('/api/riders').done(function(data) { // eslint-disable-line no-undef
+
   data.forEach(function(item) {
     var rider = document.createElement('li');
     rider.innerHTML = item.name;

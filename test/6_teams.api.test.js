@@ -6,7 +6,7 @@ chai.use(chaiHttp);
 const connection = require('../lib/setup-mongoose');
 const app = require('../lib/app');
 
-describe ('teams API E2E testing', () => {
+describe.skip ('teams API E2E testing', () => {
   let test_riders;
   const test_teams = [
     {
@@ -226,8 +226,8 @@ describe ('teams API E2E testing', () => {
       .catch(done);
   });
   
-  after((done) => {
-    connection.close(done);
-  });
+  // after((done) => {
+  //   connection.close(done);
+  // });
 
 });

@@ -8,7 +8,7 @@ chai.use(require('chai-things'));
 const connection = require('../lib/setup-mongoose');
 const app = require('../lib/app');
 
-describe ('riders API E2E tesing', () => {
+describe.skip ('riders API E2E tesing', () => {
 
   const test_riders = [
     {
