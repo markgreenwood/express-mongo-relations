@@ -179,6 +179,7 @@ describe ('riders API E2E tesing', () => {
   it ('PUT /api/riders/:id with info object updates specific rider info given id', (done) => {
     request
       .put(`/api/riders/${test_riders[1]._id}`)
+      .set('Authorization', `Bearer ${token}`)
       .send({ weight: 90 })
       .then(() => {
         request
@@ -195,6 +196,7 @@ describe ('riders API E2E tesing', () => {
   it ('DELETE /api/riders/:id deletes specific rider given id', (done) => {
     request
       .delete(`/api/riders/${test_riders[1]._id}`)
+      .set('Authorization', `Bearer ${token}`)
       .then(() => {
         request
           .get(`/api/riders/${test_riders[1]._id}`)
