@@ -6,7 +6,7 @@ chai.use(chaiHttp);
 const connection = require('../lib/setup-mongoose');
 const app = require('../lib/app');
 
-describe.skip ('teams API E2E testing', () => {
+describe ('teams API E2E testing', () => {
   let test_riders;
   const test_teams = [
     {
@@ -74,9 +74,29 @@ describe.skip ('teams API E2E testing', () => {
       .catch(done);
   });
 
+  const testuser = {
+    username: 'testuser',
+    password: 'testpass'
+  };
+
+  let token = ''; // eslint-disable-line no-unused-vars
+
+  it ('creates a test user', (done) => {
+    request
+      .post('/api/auth/signin')
+      .send(testuser)
+      .then((res) => {
+        token = res.body.token;
+        done();
+      })
+      .catch(done);
+  });
+
   it ('POSTs a bunch of teams', (done) => {
     Promise.all(
-      test_teams.map((team) => { return request.post('/api/teams').send(team); })
+      test_teams.map((team) => { 
+        return request.post('/api/teams').set('Authorization', `Bearer ${token}`).send(team);
+      })
     )
     .then((results) => {
       results.forEach((item, index) => {
@@ -124,7 +144,9 @@ describe.skip ('teams API E2E testing', () => {
 
     Promise.all(
       assignments.map((assignment) => {
-        return request.put(`/api/teams/${test_teams[assignment[1]]._id}/rider/${test_riders[assignment[0]]._id}`);
+        return request
+          .put(`/api/teams/${test_teams[assignment[1]]._id}/rider/${test_riders[assignment[0]]._id}`)
+          .set('Authorization', `Bearer ${token}`);
       })
     )
       .then(() => {
@@ -135,7 +157,8 @@ describe.skip ('teams API E2E testing', () => {
             done();
           })
           .catch(done);
-      });
+      })
+      .catch(done);
 
   });
 
@@ -174,6 +197,7 @@ describe.skip ('teams API E2E testing', () => {
   it ('updates specific team info given id', (done) => {
     request
       .put(`/api/teams/${test_teams[0]._id}`)
+      .set('Authorization', `Bearer ${token}`)
       .send({ sponsor: 'Columbia Sportswear' })
       .then(() => {
         request
@@ -190,6 +214,7 @@ describe.skip ('teams API E2E testing', () => {
   it ('deletes specific team given id', (done) => {
     request
       .delete(`/api/teams/${test_teams[1]._id}`)
+      .set('Authorization', `Bearer ${token}`)
       .then(() => {
         request
           .get(`/api/riders/${test_teams[1]._id}`)

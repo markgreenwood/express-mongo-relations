@@ -31,13 +31,14 @@ describe( 'auth', () => {
     it ('400 with no token', (done) => {
       // console.log('Entering unauthorized test');
       request
-        .get('/api/riders')
+        .post('/api/riders')
+        .send({ name: 'Bogus Rider', nationality: 'Atlantian' })
         .then((res) => { // eslint-disable-line no-unused-vars
           // console.log('Entering first then block with res ', res);
           done('status should not be 200');
         })
         .catch((err) => {
-          // console.log('Entering first catch block');
+          // console.log('Entering first catch block: err = ', err);
           expect(err.response.status).to.equal(400);
           expect(err.response.body.error).to.equal('unauthorized, no token provided');
           done();
@@ -51,8 +52,9 @@ describe( 'auth', () => {
     it ('403 with invalid token', (done) => {
       // console.log('Entering unauthorized test');
       request
-        .get('/api/riders')
+        .post('/api/riders')
         .set('Authorization', 'Bearer badtoken')
+        .send({ name: 'Bogus Rider', nationality: 'Atlantian' })
         .then((res) => { // eslint-disable-line no-unused-vars
           // console.log('Entering first then block with res ', res);
           done('status should not be 200');
