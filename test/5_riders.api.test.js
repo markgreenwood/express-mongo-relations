@@ -8,7 +8,7 @@ chai.use(require('chai-things'));
 const connection = require('../lib/setup-mongoose');
 const app = require('../lib/app');
 
-describe.skip ('riders API E2E tesing', () => {
+describe ('riders API E2E tesing', () => {
 
   const test_riders = [
     {
@@ -95,9 +95,29 @@ describe.skip ('riders API E2E tesing', () => {
       });
   });
 
+  const testuser = {
+    username: 'testuser',
+    password: 'testpass'
+  };
+
+  let token = ''; // eslint-disable-line no-unused-vars
+
+  it ('creates a test user', (done) => {
+    request
+      .post('/api/auth/register')
+      .send(testuser)
+      .then((res) => {
+        token = res.body.token;
+        done();
+      })
+      .catch(done);
+  });
+
   it ('POSTs a bunch of riders', (done) => {
     Promise.all(
-      test_riders.map((rider) => { return request.post('/api/riders').send(rider); })
+      test_riders.map((rider) => { 
+        return request.post('/api/riders').set('Authorization', `Bearer ${token}`).send(rider);
+      })
     )
     .then((results) => {
       results.forEach((item, index) => {
