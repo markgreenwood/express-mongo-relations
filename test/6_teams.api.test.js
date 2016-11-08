@@ -75,8 +75,9 @@ describe ('teams API E2E testing', () => {
   });
 
   const testuser = {
-    username: 'testuser',
-    password: 'testpass'
+    username: 'leeloo',
+    password: 'multipass',
+    roles: ['admin', 'superuser']
   };
 
   let token = ''; // eslint-disable-line no-unused-vars

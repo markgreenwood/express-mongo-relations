@@ -97,7 +97,8 @@ describe ('riders API E2E tesing', () => {
 
   const testuser = {
     username: 'testuser',
-    password: 'testpass'
+    password: 'testpass',
+    roles: ['admin', 'superuser']
   };
 
   let token = ''; // eslint-disable-line no-unused-vars
