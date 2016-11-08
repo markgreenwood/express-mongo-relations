@@ -69,6 +69,24 @@ describe ('riders API E2E tesing', () => {
     }
   ];
 
+  // const ordinaryUser = {
+  //   username: 'ordinaryuser',
+  //   password: 'password',
+  //   roles: []
+  // };
+
+  // const adminUser = {
+  //   username: 'adminuser',
+  //   password: 'multipass',
+  //   roles: [ 'admin' ]
+  // };
+
+  // const superUser = {
+  //   username: 'superuser',
+  //   password: 'supersecretpassword',
+  //   roles: [ 'admin', 'superuser' ]
+  // };
+
   before((done) => {
     const CONNECTED = 1;
     if (connection.readyState === CONNECTED) dropCollection();
@@ -95,18 +113,18 @@ describe ('riders API E2E tesing', () => {
       });
   });
 
-  const testuser = {
-    username: 'testuser',
-    password: 'testpass',
-    roles: ['admin', 'superuser']
+  const adminUser = {
+    username: 'adminuser',
+    password: 'multipass',
+    roles: ['admin']
   };
 
   let token = ''; // eslint-disable-line no-unused-vars
 
-  it ('creates a test user', (done) => {
+  it ('creates an admin user', (done) => {
     request
       .post('/api/auth/register')
-      .send(testuser)
+      .send(adminUser)
       .then((res) => {
         token = res.body.token;
         done();
@@ -190,6 +208,23 @@ describe ('riders API E2E tesing', () => {
             done();
           })
           .catch(done);
+      })
+      .catch(done);
+  });
+
+  const superUser = {
+    username: 'superuser',
+    password: 'supersecretpassword',
+    roles: ['admin', 'superuser']
+  };
+
+  it ('creates a super user', (done) => {
+    request
+      .post('/api/auth/register')
+      .send(superUser)
+      .then((res) => {
+        token = res.body.token;
+        done();
       })
       .catch(done);
   });

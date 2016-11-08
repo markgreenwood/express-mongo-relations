@@ -75,14 +75,13 @@ describe ('teams API E2E testing', () => {
   });
 
   const testuser = {
-    username: 'leeloo',
-    password: 'multipass',
-    roles: ['admin', 'superuser']
+    username: 'adminuser',
+    password: 'multipass'
   };
 
   let token = ''; // eslint-disable-line no-unused-vars
 
-  it ('creates a test user', (done) => {
+  it ('signs in an admin test user', (done) => {
     request
       .post('/api/auth/signin')
       .send(testuser)
@@ -208,6 +207,22 @@ describe ('teams API E2E testing', () => {
             done();
           })
           .catch(done);
+      })
+      .catch(done);
+  });
+
+  const superuser = {
+    username: 'superuser',
+    password: 'supersecretpassword'
+  };
+
+  it ('signs in a super user', (done) => {
+    request
+      .post('/api/auth/signin')
+      .send(superuser)
+      .then((res) => {
+        token = res.body.token;
+        done();
       })
       .catch(done);
   });
