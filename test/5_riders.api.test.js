@@ -69,24 +69,6 @@ describe ('riders API E2E tesing', () => {
     }
   ];
 
-  // const ordinaryUser = {
-  //   username: 'ordinaryuser',
-  //   password: 'password',
-  //   roles: []
-  // };
-
-  // const adminUser = {
-  //   username: 'adminuser',
-  //   password: 'multipass',
-  //   roles: [ 'admin' ]
-  // };
-
-  // const superUser = {
-  //   username: 'superuser',
-  //   password: 'supersecretpassword',
-  //   roles: [ 'admin', 'superuser' ]
-  // };
-
   before((done) => {
     const CONNECTED = 1;
     if (connection.readyState === CONNECTED) dropCollection();
@@ -110,6 +92,19 @@ describe ('riders API E2E tesing', () => {
       .get('/api/riders')
       .then((res) => {
         expect(res.body).to.deep.equal([]);
+      });
+  });
+
+  it ('POST /api/riders without admin privilege should fail', (done) => {
+    request
+      .post('/api/riders')
+      .send({ name: 'Fred Phred', nationality: 'French' })
+      .then(() => {
+        done('Shouldn\'t be able to POST without "admin" privilege');
+      })
+      .catch((err) => {
+        expect(err).to.have.status(400);
+        done();
       });
   });
 
@@ -147,7 +142,6 @@ describe ('riders API E2E tesing', () => {
     })
     .catch(done);
   });
-
 
   it ('GET / returns all riders after POST', (done) => {
 
@@ -210,6 +204,19 @@ describe ('riders API E2E tesing', () => {
           .catch(done);
       })
       .catch(done);
+  });
+
+  it ('DELETE /api/riders/:id without "superuser" privilege should fail', (done) => {
+    request
+      .delete(`/api/riders/${test_riders[1]._id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .then(() => {
+        done('Shouldn\'t be able to DELETE without "superuser" privilege');
+      })
+      .catch((err) => {
+        expect(err).to.have.status(400);
+        done();
+      });
   });
 
   const superUser = {

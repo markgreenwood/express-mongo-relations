@@ -162,21 +162,6 @@ describe ('teams API E2E testing', () => {
 
   });
 
-  // it ('PUT two more riders on the same team as before', (done) => {
-
-  //   request
-  //     .put(`/api/teams/${test_teams[0]._id}/rider/${test_riders[2]._id}`)
-  //     .then(() => {
-  //       request
-  //         .put(`/api/teams/${test_teams[0]._id}/rider/${test_riders[6]._id}`)
-  //         .then(() => {
-  //           done();
-  //         })
-  //         .catch(done);
-  //     })
-  //     .catch(done);
-  // });
-
   it ('GET /:team_id/riders lists the specified team along with the riders on it', (done) => {
   
     request

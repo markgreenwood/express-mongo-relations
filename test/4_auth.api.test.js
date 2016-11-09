@@ -29,44 +29,36 @@ describe( 'auth', () => {
   describe ('unauthorized', () => {
 
     it ('400 with no token', (done) => {
-      // console.log('Entering unauthorized test');
       request
         .post('/api/riders')
         .send({ name: 'Bogus Rider', nationality: 'Atlantian' })
         .then((res) => { // eslint-disable-line no-unused-vars
-          // console.log('Entering first then block with res ', res);
           done('status should not be 200');
         })
         .catch((err) => {
-          // console.log('Entering first catch block: err = ', err);
           expect(err.response.status).to.equal(400);
           expect(err.response.body.error).to.equal('unauthorized, no token provided');
           done();
         })
         .catch((err) => {
-          // console.log('Entering second catch block');
           done(err);
         });
     });
 
     it ('403 with invalid token', (done) => {
-      // console.log('Entering unauthorized test');
       request
         .post('/api/riders')
         .set('Authorization', 'Bearer badtoken')
         .send({ name: 'Bogus Rider', nationality: 'Atlantian' })
         .then((res) => { // eslint-disable-line no-unused-vars
-          // console.log('Entering first then block with res ', res);
           done('status should not be 200');
         })
         .catch((err) => {
-          // console.log('Entering first catch block');
           expect(err.response.status).to.equal(403);
           expect(err.response.body.error).to.equal('unauthorized, invalid token');
           done();
         })
         .catch((err) => {
-          // console.log('Entering second catch block');
           done(err);
         });
     });
