@@ -20,6 +20,31 @@ This was written as a lab assignment for Code Fellows 401 class.
 
 ## API Reference
 
+### Users
+
+A new user can be created using the /api/auth/register path. Provide a user object as follows:
+```
+{
+  username: "jane"
+  password: "abcd"
+  roles: [ 'admin', 'superuser' ]
+}
+```
+where roles are empty, or one or both of "admin" and "superuser". Any user can perform GET 
+operations. POST and PUT operations require an "admin", and DELETE operations require "superuser".
+
+The /api/auth/signin path (with a `{ username: <username>, password: <password> }` object) returns a token
+if the user authenticates.
+
+There is also a /api/auth/validate path to validate a user's token.
+
+Once a valid token is obtained, it should be passed in PUT, POST, or DELETE headers as:
+```
+{
+  'Authorization', 'Bearer <token>'
+}
+```
+
 ### GET operations
 
 ```
