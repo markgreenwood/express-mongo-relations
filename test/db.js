@@ -16,7 +16,7 @@ module.exports = {
       onOpen(() => connection.dropDatabase());
     };
   },
-  dropCollection(collectionName) {
+  dropCollection(collectionName) { // eslint-disable-line no-unused-vars
     return () => {
       onOpen((name) => {
         const collection = connection.collections[name];
