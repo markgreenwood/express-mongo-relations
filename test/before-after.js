@@ -1,5 +1,6 @@
-// const connection = require('../lib/setup-mongoose');
-// const db = require('./db');
-before(() => console.log('Running the before all block'));
+const connection = require('../lib/setup-mongoose');
+const db = require('./db');
 
-after(() => console.log('Running the after all block'));
+before(db.drop());
+
+after(() => connection.close());
